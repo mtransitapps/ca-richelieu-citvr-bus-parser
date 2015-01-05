@@ -123,6 +123,8 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		return super.getStopCode(gStop);
 	}
 
+	private static final Pattern DIGITS = Pattern.compile("[\\d]+");
+
 	@Override
 	public int getStopId(GStop gStop) {
 		String stopCode = getStopCode(gStop);
