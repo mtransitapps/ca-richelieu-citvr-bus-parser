@@ -81,23 +81,11 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		return MSpec.cleanLabel(routeLongName);
 	}
 
-	@Override
-	public String getRouteShortName(GRoute gRoute) {
-		return super.getRouteShortName(gRoute);
-	}
-
 	private static final String ROUTE_COLOR = "ABBE00";
 
 	@Override
 	public String getRouteColor(GRoute gRoute) {
 		return ROUTE_COLOR;
-	}
-
-	private static final String ROUTE_TEXT_COLOR = "FFFFFF";
-
-	@Override
-	public String getRouteTextColor(GRoute gRoute) {
-		return ROUTE_TEXT_COLOR;
 	}
 
 	@Override
