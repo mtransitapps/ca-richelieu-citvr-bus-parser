@@ -84,6 +84,8 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		return AGENCY_COLOR;
 	}
 
+	private static final String DASH = " - ";
+
 	@Override
 	public void setTripHeadsign(MRoute route, MTrip mTrip, GTrip gTrip) {
 		String stationName = cleanTripHeadsign(gTrip.trip_headsign);
@@ -92,6 +94,8 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 			if (directionId == 1) {
 				stationName += " 2";
 			}
+		} else if (mTrip.getRouteId() == 30l) {
+			stationName = stationName.substring(stationName.indexOf(DASH) + DASH.length());
 		}
 		mTrip.setHeadsignString(stationName, directionId);
 	}
