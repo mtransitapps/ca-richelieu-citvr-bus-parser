@@ -1,5 +1,6 @@
 package org.mtransit.parser.ca_richelieu_citvr_bus;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -90,7 +91,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	public void setTripHeadsign(MRoute route, MTrip mTrip, GTrip gTrip) {
 		String stationName = cleanTripHeadsign(gTrip.trip_headsign);
 		int directionId = gTrip.direction_id;
-		if (mTrip.getRouteId() == 7l) {
+		if (route.id == 7l) {
 			if (directionId == 1) {
 				stationName += " 2";
 			}
@@ -143,50 +144,77 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	private static final Pattern DIGITS = Pattern.compile("[\\d]+");
 
+	private static final String _MERGED = "_merged_";
+
+	private static final String A = "A";
+	private static final String B = "B";
+	private static final String C = "C";
+	private static final String D = "D";
+	private static final String E = "E";
+	private static final String F = "F";
+	private static final String G = "G";
+	private static final String H = "H";
+
+	private static final String LON = "LON";
+	private static final String SHY = "SHY";
+	private static final String SJU = "SJU";
+	private static final String SBA = "SBA";
+	private static final String OTP = "OTP";
+	private static final String MSH = "MSH";
+	private static final String MMS = "MMS";
+	private static final String BEL = "BEL";
+
 	@Override
 	public int getStopId(GStop gStop) {
 		String stopCode = getStopCode(gStop);
 		if (stopCode != null && stopCode.length() > 0) {
 			return Integer.valueOf(stopCode); // using stop code as stop ID
 		}
-		Matcher matcher = DIGITS.matcher(gStop.stop_id);
+		String stop_id = gStop.stop_id;
+		int indexOf = stop_id.indexOf(_MERGED);
+		if (indexOf >= 0) {
+			stop_id = stop_id.substring(0, indexOf);
+		}
+		Matcher matcher = DIGITS.matcher(stop_id);
 		matcher.find();
 		int digits = Integer.parseInt(matcher.group());
 		int stopId;
-		if (gStop.stop_id.startsWith("BEL")) {
+		if (stop_id.startsWith(BEL)) {
 			stopId = 100000;
-		} else if (gStop.stop_id.startsWith("MMS")) {
+		} else if (stop_id.startsWith(MMS)) {
 			stopId = 200000;
-		} else if (gStop.stop_id.startsWith("MSH")) {
+		} else if (stop_id.startsWith(MSH)) {
 			stopId = 300000;
-		} else if (gStop.stop_id.startsWith("OTP")) {
+		} else if (stop_id.startsWith(OTP)) {
 			stopId = 400000;
-		} else if (gStop.stop_id.startsWith("SBA")) {
+		} else if (stop_id.startsWith(SBA)) {
 			stopId = 500000;
-		} else if (gStop.stop_id.startsWith("SJU")) {
+		} else if (stop_id.startsWith(SJU)) {
 			stopId = 600000;
-		} else if (gStop.stop_id.startsWith("SHY")) {
+		} else if (stop_id.startsWith(SHY)) {
 			stopId = 700000;
+		} else if (stop_id.startsWith(LON)) {
+			stopId = 800000;
 		} else {
 			System.out.println("Stop doesn't have an ID (start with)! " + gStop);
 			System.exit(-1);
 			stopId = -1;
 		}
-		if (gStop.stop_id.endsWith("A")) {
+		if (stop_id.endsWith(A)) {
 			stopId += 1000;
-		} else if (gStop.stop_id.endsWith("B")) {
+		} else if (stop_id.endsWith(B)) {
 			stopId += 2000;
-		} else if (gStop.stop_id.endsWith("C")) {
+		} else if (stop_id.endsWith(C)) {
 			stopId += 3000;
-		} else if (gStop.stop_id.endsWith("D")) {
+		} else if (stop_id.endsWith(D)) {
 			stopId += 4000;
-		} else if (gStop.stop_id.endsWith("E")) {
+		} else if (stop_id.endsWith(E)) {
 			stopId += 5000;
-		} else if (gStop.stop_id.endsWith("F")) {
+		} else if (stop_id.endsWith(F)) {
 			stopId += 6000;
-		} else if (gStop.stop_id.endsWith("G")) {
+		} else if (stop_id.endsWith(G)) {
 			stopId += 7000;
-		} else if (gStop.stop_id.endsWith("H")) {
+		} else if (stop_id.endsWith(H)) {
 			stopId += 8000;
 		} else {
 			System.out.println("Stop doesn't have an ID (end with)! " + gStop);
@@ -194,5 +222,4 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		}
 		return stopId + digits;
 	}
-
 }
