@@ -1,6 +1,5 @@
 package org.mtransit.parser.ca_richelieu_citvr_bus;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
