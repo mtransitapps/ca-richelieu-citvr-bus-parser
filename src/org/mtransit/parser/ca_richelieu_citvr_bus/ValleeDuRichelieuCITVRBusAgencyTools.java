@@ -9,6 +9,7 @@ import org.mtransit.parser.Utils;
 import org.mtransit.parser.gtfs.data.GCalendar;
 import org.mtransit.parser.gtfs.data.GCalendarDate;
 import org.mtransit.parser.gtfs.data.GRoute;
+import org.mtransit.parser.gtfs.data.GSpec;
 import org.mtransit.parser.gtfs.data.GStop;
 import org.mtransit.parser.gtfs.data.GTrip;
 import org.mtransit.parser.mt.data.MAgency;
@@ -87,17 +88,16 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	private static final String DASH = " - ";
 
 	@Override
-	public void setTripHeadsign(MRoute route, MTrip mTrip, GTrip gTrip) {
+	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
 		String stationName = cleanTripHeadsign(gTrip.trip_headsign);
-		int directionId = gTrip.direction_id;
-		if (route.id == 7l) {
-			if (directionId == 1) {
+		if (mRoute.id == 7l) {
+			if (gTrip.direction_id == 1) {
 				stationName += " 2";
 			}
-		} else if (mTrip.getRouteId() == 30l) {
+		} else if (mRoute.id == 30l) {
 			stationName = stationName.substring(stationName.indexOf(DASH) + DASH.length());
 		}
-		mTrip.setHeadsignString(stationName, directionId);
+		mTrip.setHeadsignString(stationName, gTrip.direction_id);
 	}
 
 	private static final Pattern DIRECTION = Pattern.compile("(direction )", Pattern.CASE_INSENSITIVE);
