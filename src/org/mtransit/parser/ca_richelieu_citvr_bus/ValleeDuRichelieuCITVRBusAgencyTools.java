@@ -73,7 +73,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public String getRouteLongName(GRoute gRoute) {
-		String routeLongName = gRoute.route_long_name;
+		String routeLongName = gRoute.getRouteLongName();
 		routeLongName = CleanUtils.SAINT.matcher(routeLongName).replaceAll(CleanUtils.SAINT_REPLACEMENT);
 		return CleanUtils.cleanLabel(routeLongName);
 	}
@@ -89,15 +89,15 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
-		String stationName = cleanTripHeadsign(gTrip.trip_headsign);
+		String stationName = cleanTripHeadsign(gTrip.getTripHeadsign());
 		if (mRoute.id == 7l) {
-			if (gTrip.direction_id == 1) {
+			if (gTrip.getDirectionId() == 1) {
 				stationName += " 2";
 			}
 		} else if (mRoute.id == 30l) {
 			stationName = stationName.substring(stationName.indexOf(DASH) + DASH.length());
 		}
-		mTrip.setHeadsignString(stationName, gTrip.direction_id);
+		mTrip.setHeadsignString(stationName, gTrip.getDirectionId());
 	}
 
 	private static final Pattern DIRECTION = Pattern.compile("(direction )", Pattern.CASE_INSENSITIVE);
@@ -135,7 +135,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public String getStopCode(GStop gStop) {
-		if ("0".equals(gStop.stop_code)) {
+		if ("0".equals(gStop.getStopCode())) {
 			return null;
 		}
 		return super.getStopCode(gStop);
@@ -169,7 +169,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		if (stopCode != null && stopCode.length() > 0) {
 			return Integer.valueOf(stopCode); // using stop code as stop ID
 		}
-		String stop_id = gStop.stop_id;
+		String stop_id = gStop.getStopId();
 		int indexOf = stop_id.indexOf(_MERGED);
 		if (indexOf >= 0) {
 			stop_id = stop_id.substring(0, indexOf);
