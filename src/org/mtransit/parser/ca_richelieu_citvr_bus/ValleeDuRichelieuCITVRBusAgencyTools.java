@@ -90,11 +90,11 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	@Override
 	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
 		String stationName = cleanTripHeadsign(gTrip.getTripHeadsign());
-		if (mRoute.id == 7l) {
+		if (mRoute.getId() == 7l) {
 			if (gTrip.getDirectionId() == 1) {
 				stationName += " 2";
 			}
-		} else if (mRoute.id == 30l) {
+		} else if (mRoute.getId() == 30l) {
 			stationName = stationName.substring(stationName.indexOf(DASH) + DASH.length());
 		}
 		mTrip.setHeadsignString(stationName, gTrip.getDirectionId());
