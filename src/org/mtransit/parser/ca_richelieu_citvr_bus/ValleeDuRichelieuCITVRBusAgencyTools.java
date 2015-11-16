@@ -245,8 +245,6 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		return super.splitTripStop(mRoute, gTrip, gTripStop, splitTrips, routeGTFS);
 	}
 
-	private static final String DASH = " - ";
-
 	@Override
 	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
 		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
@@ -254,10 +252,6 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		}
 		if (mRoute.getId() == 7l) {
 			mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()) + " " + (gTrip.getDirectionId() + 1), gTrip.getDirectionId());
-			return;
-		} else if (mRoute.getId() == 30l) {
-			String tripHeadSign = gTrip.getTripHeadsign().substring(gTrip.getTripHeadsign().indexOf(DASH) + DASH.length());
-			mTrip.setHeadsignString(cleanTripHeadsign(tripHeadSign), gTrip.getDirectionId());
 			return;
 		}
 		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), gTrip.getDirectionId());
