@@ -104,6 +104,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	private static final String LES_SALINES = "Les Salines";
 	private static final String PARC_INDUSTRIEL = "Parc Ind.";
 	private static final String ST_JOSEPH = "St-Joseph";
+	private static final String ST_HYACINTHE = "St-Hyacinthe";
 	private static final String ST_THOMAS = "St-Thomas";
 	private static final String STE_ROSALIE = "Ste-Rosalie";
 
@@ -257,6 +258,24 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), gTrip.getDirectionId());
 	}
 
+	@Override
+	public boolean mergeHeadsign(MTrip mTrip, MTrip mTripToMerge) {
+		if (mTrip.getRouteId() == 200l) {
+			if (mTrip.getHeadsignId() == 0) {
+				mTrip.setHeadsignString(ST_HYACINTHE, mTrip.getHeadsignId());
+				return true;
+			}
+		} else if (mTrip.getRouteId() == 300l) {
+			if (mTrip.getHeadsignId() == 0) {
+				mTrip.setHeadsignString(ST_HYACINTHE, mTrip.getHeadsignId());
+				return true;
+			}
+		}
+		System.out.printf("\nUnexpected trips to merge %s and %s.\n", mTrip, mTripToMerge);
+		System.exit(-1);
+		return false;
+	}
+
 	private static final Pattern DIRECTION = Pattern.compile("(direction )", Pattern.CASE_INSENSITIVE);
 
 	private static final Pattern SERVICE_LOCAL = Pattern.compile("(service local)", Pattern.CASE_INSENSITIVE);
@@ -266,6 +285,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		tripHeadsign = DIRECTION.matcher(tripHeadsign).replaceAll(StringUtils.EMPTY);
 		tripHeadsign = SERVICE_LOCAL.matcher(tripHeadsign).replaceAll(StringUtils.EMPTY);
 		tripHeadsign = CleanUtils.cleanStreetTypesFRCA(tripHeadsign);
+		tripHeadsign = CleanUtils.removePoints(tripHeadsign);
 		return CleanUtils.cleanLabelFR(tripHeadsign);
 	}
 
