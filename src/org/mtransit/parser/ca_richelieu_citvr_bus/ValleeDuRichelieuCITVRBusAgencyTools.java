@@ -29,7 +29,7 @@ import org.mtransit.parser.CleanUtils;
 import org.mtransit.parser.mt.data.MTrip;
 
 // https://www.amt.qc.ca/en/about/open-data
-// http://www.amt.qc.ca/xdata/citvr/google_transit.zip
+// https://www.amt.qc.ca/xdata/citvr/google_transit.zip
 public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(String[] args) {
@@ -187,13 +187,19 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, LES_SALINES, //
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { "SHY191C", "SHY335B" })) //
-				.addALLFromTo(MDirectionType.NORTH.intValue(), // ,
-						"SHY191C", "SHY335B") //
+						Arrays.asList(new String[] { //
+						"SHY191C", // Galeries St-Hyacinthe (porte #1)
+								"SHY191C", // Galeries St-Hyacinthe (porte #1)
+								"SHY335B", // Parc les Salines
+								"SHY335B", // Parc les Salines
+						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { "SHY335B", "SHY191C" })) //
-				.addALLFromTo(MDirectionType.SOUTH.intValue(), // ,
-						"SHY335B", "SHY191C") //
+						Arrays.asList(new String[] { //
+						"SHY335B", // Parc les Salines
+								"SHY335B", // Parc les Salines
+								"SHY191C", // Galeries St-Hyacinthe (porte #1)
+								"SHY191C", // Galeries St-Hyacinthe (porte #1)
+						})) //
 				.compileBothTripSort());
 		map2.put(62l, new RouteTripSpec(62l, //
 				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES, //
