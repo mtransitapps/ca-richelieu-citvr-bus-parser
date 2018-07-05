@@ -116,7 +116,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		return super.getRouteId(gRoute);
 	}
 
-	private static final String AGENCY_COLOR = "ABBE00";
+	private static final String AGENCY_COLOR = "1F1F1F"; // DARK GRAY (from GTFS)
 
 	@Override
 	public String getAgencyColor() {
