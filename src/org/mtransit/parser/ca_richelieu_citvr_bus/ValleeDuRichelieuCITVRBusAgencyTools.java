@@ -389,10 +389,6 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
 			return; // split
 		}
-		if (mRoute.getId() == 7l) {
-			mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()) + " " + (gTrip.getDirectionId() + 1), gTrip.getDirectionId());
-			return;
-		}
 		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), gTrip.getDirectionId());
 	}
 
