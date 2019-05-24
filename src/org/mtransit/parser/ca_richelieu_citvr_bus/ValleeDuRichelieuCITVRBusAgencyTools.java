@@ -230,15 +230,29 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
 						Arrays.asList(new String[] { //
-						"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"73682", // "SHY231B", // boul. Laframboise / face au 6165
-								"73688", // "SHY245B", // avenue Léon / avenue Sansoucy (2e arrêt boîte aux lettres)
+						"73700", // Galeries St-Hyacinthe (porte #1)
+								"79998", // ==
+								"79997", // != <>
+								"79994", // != <>
+								"73697", // !== <>
+								"73698", // != <>
+								"73699", // !== <>
+								"73681", // ==
+								"73688", // avenue Léon / avenue Sansoucy (2e arrêt boîte aux lettres) =>
 						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
 						Arrays.asList(new String[] { //
-						"73688", // "SHY245B", // avenue Léon / avenue Sansoucy (2e arrêt boîte aux lettres)
-								"73694",// "SHY250D", // rue des Semailles / avenue Harpin
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
+						"73688", // avenue Léon / avenue Sansoucy (2e arrêt boîte aux lettres) <=
+								"73696", // ==
+								"79993", // !=
+								"79997", // != <>
+								"79994", // != <>
+								"73697", // !== <>
+								"73698", // != <>
+								"73699", // !== <>
+								"73701", // != !=
+								"79999", // ==
+								"73700", // Galeries St-Hyacinthe (porte #1)
 						})) //
 				.compileBothTripSort());
 		map2.put(56L, new RouteTripSpec(56L, //
