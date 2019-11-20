@@ -28,8 +28,8 @@ import org.mtransit.parser.mt.data.MTripStop;
 import org.mtransit.parser.CleanUtils;
 import org.mtransit.parser.mt.data.MTrip;
 
-// https://rtm.quebec/en/about/open-data
-// https://rtm.quebec/xdata/citvr/google_transit.zip
+// https://exo.quebec/en/about/open-data
+// https://exo.quebec/xdata/citvr/google_transit.zip
 public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(String[] args) {
