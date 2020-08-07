@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mtransit.parser.DefaultAgencyTools;
+import org.mtransit.parser.MTLog;
 import org.mtransit.parser.Pair;
 import org.mtransit.parser.SplitUtils;
 import org.mtransit.parser.Utils;
@@ -46,11 +47,11 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public void start(String[] args) {
-		System.out.printf("\nGenerating CITVR bus data...");
+		MTLog.log("Generating CITVR bus data...");
 		long start = System.currentTimeMillis();
 		this.serviceIds = extractUsefulServiceIds(args, this);
 		super.start(args);
-		System.out.printf("\nGenerating CITVR bus data... DONE in %s.\n", Utils.getPrettyDuration(System.currentTimeMillis() - start));
+		MTLog.log("Generating CITVR bus data... DONE in %s.", Utils.getPrettyDuration(System.currentTimeMillis() - start));
 	}
 
 	@Override
@@ -114,9 +115,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 					return RID_ENDS_WITH_M + digits;
 				}
 			}
-			System.out.printf("\nUnexpected route ID for %s!\n", gRoute);
-			System.exit(-1);
-			return -1L;
+			throw new MTLog.Fatal("Unexpected route ID for %s!", gRoute);
 		}
 		return super.getRouteId(gRoute);
 	}
@@ -143,234 +142,6 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	private static HashMap<Long, RouteTripSpec> ALL_ROUTE_TRIPS2;
 	static {
 		HashMap<Long, RouteTripSpec> map2 = new HashMap<Long, RouteTripSpec>();
-		map2.put(50L, new RouteTripSpec(50L, //
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, CENTRE_VILLE) //
-				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-								"73765", // "SHY175B", // avenue Ste-Anne / face à l'Hôtel-Dieu
-								"73765", // "SHY195D", // avenue Ste-Anne / face à l'Hôtel-Dieu
-								"73767", // "SHY179G", // boul. Laframboise / rue Morison
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-						})) //
-				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"73775", // "SHY193D", // boul. Laframboise / rue Nelson
-								"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-						})) //
-				.compileBothTripSort());
-		map2.put(51L, new RouteTripSpec(51L, //
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, CENTRE_VILLE, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_JOSEPH) //
-				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73712", // "SHY87C", // rue Lemonde / avenue St-Louis
-								"73715", // "SHY93B", // avenue de la Concorde / rue Brunette
-								"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-						})) //
-				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-								"73706", // "SHY74D", // avenue St-Louis / rue Brunette
-								"73712", // "SHY87C", // rue Lemonde / avenue St-Louis
-						})) //
-				.compileBothTripSort());
-		map2.put(52L, new RouteTripSpec(52L, //
-				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, CENTRE_VILLE, //
-				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, DOUVILLE) //
-				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { //
-						"73731", // "SHY127D", // avenue Duchesnay / rue Garnier
-								"73737", // "SHY133A", // rue Jacques-Cartier / avenue Castelneau
-								"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-						})) //
-				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { //
-						"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-								"73722", // "SHY109B", // avenue Castelneau / rue Montigny
-								"73731", // "SHY127D", // avenue Duchesnay / rue Garnier
-						})) //
-				.compileBothTripSort());
-		map2.put(53L, new RouteTripSpec(53L, //
-				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, STE_ROSALIE, //
-				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, CENTRE_VILLE) //
-				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { //
-						"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-								"73746", // "SHY147A", // rue Jolibois / avenue Brabant
-								"73754", // "SHY159D", // avenue Gosselin / boul. Laurier
-						})) //
-				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { //
-						"73754", // "SHY159D", // avenue Gosselin / boul. Laurier
-								"73759", // "SHY166C", // boul. Laurier / avenue Brabant
-								"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-						})) //
-				.compileBothTripSort());
-		map2.put(54L, new RouteTripSpec(54L, //
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, CENTRE_VILLE) //
-				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-								"73785", // "SHY202B", // boul. Choquette / rue Bourassa
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-						})) //
-				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"73794", // "SHY201H", // rue Nelson / boul. Choquette
-								"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-						})) //
-				.compileBothTripSort());
-		map2.put(55L, new RouteTripSpec(55L, //
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_THOMAS, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES) //
-				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73700", // Galeries St-Hyacinthe (porte #1)
-								"79998", // ==
-								"79997", // != <>
-								"79994", // != <>
-								"73697", // !== <>
-								"73698", // != <>
-								"73699", // !== <>
-								"73681", // ==
-								"73688", // avenue Léon / avenue Sansoucy (2e arrêt boîte aux lettres) =>
-						})) //
-				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73688", // avenue Léon / avenue Sansoucy (2e arrêt boîte aux lettres) <=
-								"73696", // ==
-								"79993", // !=
-								"79997", // != <>
-								"79994", // != <>
-								"73697", // !== <>
-								"73698", // != <>
-								"73699", // !== <>
-								"73701", // != !=
-								"79999", // ==
-								"73700", // Galeries St-Hyacinthe (porte #1)
-						})) //
-				.compileBothTripSort());
-		map2.put(56L, new RouteTripSpec(56L, //
-				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, CENTRE_VILLE, //
-				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, LA_PROVIDENCE) //
-				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { //
-						"73649", // "SHY287B", // avenue Roy / rue St-Pierre
-								"73651", // "SHY290A", // avenue Roy / rue St-Pierre
-								"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-						})) //
-				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { //
-						"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-								"73814", // "SHY275B", // avenue Bourdages / face au 16720
-								"73649", // "SHY287B", // avenue Roy / rue St-Pierre
-						})) //
-				.compileBothTripSort());
-		map2.put(57L, new RouteTripSpec(57L, //
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, CENTRE_VILLE) //
-				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-								"73657", // "SHY307A", // rue du Sacré-Coeur / avenue des Grandes-Orgues
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-						})) //
-				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"73673", // "SHY311D", // avenue des Grandes-Orgues / face à l'École Professionnelle
-								"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-						})) //
-				.compileBothTripSort());
-		map2.put(60L, new RouteTripSpec(60L, //
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, CÉGEP) //
-				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73600", // "SHY135B", // Cégep Saint-Hyacinthe
-								"73804", // SHY214A", // rue Prosper / face au 2975 (L'Escale)
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-						})) //
-				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"73793", // "SHY202D", // boul. Choquette / rue Bourassa
-								"73600", // "SHY135B", // Cégep Saint-Hyacinthe
-						})) //
-				.compileBothTripSort());
-		map2.put(61L, new RouteTripSpec(61L, //
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, LES_SALINES, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES) //
-				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"SHY335B", // Parc les Salines
-								"SHY335B", // Parc les Salines
-						})) //
-				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"SHY335B", // Parc les Salines
-								"SHY335B", // Parc les Salines
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-						})) //
-				.compileBothTripSort());
-		map2.put(62L, new RouteTripSpec(62L, //
-				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES, //
-				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, PARC_INDUSTRIEL) //
-				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { //
-						"73594", // "SHY58B", // boul. Choquette / avenue Pinard
-								"73596", // "SHY349A", // rue Picard / avenue Beaudry
-								"73599", // "SHY360A", // rue Picard / avenue Desjardins
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-						})) //
-				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { //
-						"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"73642", // "SHY62B", // boul. Choquette / avenue Trudeau
-								"73592", // "SHY337C", // boul. Choquette / face au 6285
-								"73594", // "SHY58B", // boul. Choquette / avenue Pinard
-						})) //
-				.compileBothTripSort());
-		map2.put(70L, new RouteTripSpec(70L, //
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, CENTRE_VILLE) //
-				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-								"73768", // "SHY180B", // boul. Laframboise / rue du Sacré-Coeur
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-						})) //
-				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"73779", // "SHY362D", // avenue Beauparlant / rue Viger
-								"73996", // "SHY1A", // Terminus Saint-Hyacinthe
-						})) //
-				.compileBothTripSort());
-		map2.put(71L, new RouteTripSpec(71L, //
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, LES_SALINES, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GALERIES) //
-				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-								"73675", // "SHY316A", // boul. Casavant / avenue T.-D. Bouchard
-								"73800", // "SHY335B", // Parc les Salines
-						})) //
-				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"73800", // "SHY335B", // Parc les Salines
-								"73699", // "SHY225C", // Bureau en Gros
-								"73700", // "SHY191C", // Galeries St-Hyacinthe (porte #1)
-						})) //
-				.compileBothTripSort());
 		ALL_ROUTE_TRIPS2 = map2;
 	}
 
@@ -418,9 +189,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 				return true;
 			}
 		}
-		System.out.printf("\nUnexpected trips to merge %s and %s.\n", mTrip, mTripToMerge);
-		System.exit(-1);
-		return false;
+		throw new MTLog.Fatal("Unexpected trips to merge %s and %s.", mTrip, mTripToMerge);
 	}
 
 	private static final Pattern DIRECTION = Pattern.compile("(direction )", Pattern.CASE_INSENSITIVE);
@@ -515,9 +284,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 			} else if (stop_id.startsWith(LON)) {
 				stopId = 800000;
 			} else {
-				System.out.println("Stop doesn't have an ID (start with)! " + gStop);
-				System.exit(-1);
-				stopId = -1;
+				throw new MTLog.Fatal("Stop doesn't have an ID (start with)! " + gStop);
 			}
 			if (stop_id.endsWith(A)) {
 				stopId += 1000;
@@ -536,13 +303,10 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 			} else if (stop_id.endsWith(H)) {
 				stopId += 8000;
 			} else {
-				System.out.println("Stop doesn't have an ID (end with)! " + gStop);
-				System.exit(-1);
+				throw new MTLog.Fatal("Stop doesn't have an ID (end with)! " + gStop);
 			}
 			return stopId + digits;
 		}
-		System.out.printf("\nUnexpected stop ID for %s!\n", gStop);
-		System.exit(-1);
-		return -1;
+		throw new MTLog.Fatal("Unexpected stop ID for %s!", gStop);
 	}
 }
