@@ -1,23 +1,16 @@
 package org.mtransit.parser.ca_richelieu_citvr_bus;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mtransit.parser.CleanUtils;
+import org.mtransit.commons.CharUtils;
+import org.mtransit.commons.CleanUtils;
+import org.mtransit.commons.RegexUtils;
+import org.mtransit.commons.StringUtils;
 import org.mtransit.parser.DefaultAgencyTools;
 import org.mtransit.parser.MTLog;
-import org.mtransit.parser.StringUtils;
-import org.mtransit.parser.Utils;
-import org.mtransit.parser.gtfs.data.GCalendar;
-import org.mtransit.parser.gtfs.data.GCalendarDate;
 import org.mtransit.parser.gtfs.data.GRoute;
-import org.mtransit.parser.gtfs.data.GSpec;
 import org.mtransit.parser.gtfs.data.GStop;
-import org.mtransit.parser.gtfs.data.GTrip;
 import org.mtransit.parser.mt.data.MAgency;
-import org.mtransit.parser.mt.data.MRoute;
-import org.mtransit.parser.mt.data.MTrip;
 
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,55 +22,19 @@ import static org.mtransit.parser.StringUtils.EMPTY;
 // https://exo.quebec/xdata/citvr/google_transit.zip
 public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
-	public static void main(@Nullable String[] args) {
-		if (args == null || args.length == 0) {
-			args = new String[3];
-			args[0] = "input/gtfs.zip";
-			args[1] = "../../mtransitapps/ca-richelieu-citvr-bus-android/res/raw/";
-			args[2] = ""; // files-prefix
-		}
+	public static void main(@NotNull String[] args) {
 		new ValleeDuRichelieuCITVRBusAgencyTools().start(args);
 	}
 
-	@Nullable
-	private HashSet<Integer> serviceIdInts;
-
 	@Override
-	public void start(@NotNull String[] args) {
-		MTLog.log("Generating CITVR bus data...");
-		long start = System.currentTimeMillis();
-		this.serviceIdInts = extractUsefulServiceIdInts(args, this, true);
-		super.start(args);
-		MTLog.log("Generating CITVR bus data... DONE in %s.", Utils.getPrettyDuration(System.currentTimeMillis() - start));
+	public boolean defaultExcludeEnabled() {
+		return true;
 	}
 
+	@NotNull
 	@Override
-	public boolean excludingAll() {
-		return this.serviceIdInts != null && this.serviceIdInts.isEmpty();
-	}
-
-	@Override
-	public boolean excludeCalendar(@NotNull GCalendar gCalendar) {
-		if (this.serviceIdInts != null) {
-			return excludeUselessCalendarInt(gCalendar, this.serviceIdInts);
-		}
-		return super.excludeCalendar(gCalendar);
-	}
-
-	@Override
-	public boolean excludeCalendarDate(@NotNull GCalendarDate gCalendarDates) {
-		if (this.serviceIdInts != null) {
-			return excludeUselessCalendarDateInt(gCalendarDates, this.serviceIdInts);
-		}
-		return super.excludeCalendarDate(gCalendarDates);
-	}
-
-	@Override
-	public boolean excludeTrip(@NotNull GTrip gTrip) {
-		if (this.serviceIdInts != null) {
-			return excludeUselessTripInt(gTrip, this.serviceIdInts);
-		}
-		return super.excludeTrip(gTrip);
+	public String getAgencyName() {
+		return "exo VR";
 	}
 
 	@NotNull
@@ -88,8 +45,7 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	@NotNull
 	@Override
-	public String getRouteLongName(@NotNull GRoute gRoute) {
-		String routeLongName = gRoute.getRouteLongNameOrDefault();
+	public String cleanRouteLongName(@NotNull String routeLongName) {
 		routeLongName = CleanUtils.SAINT.matcher(routeLongName).replaceAll(CleanUtils.SAINT_REPLACEMENT);
 		return CleanUtils.cleanLabel(routeLongName);
 	}
@@ -97,15 +53,18 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	private static final long RID_ENDS_WITH_B = 2_000L;
 	private static final long RID_ENDS_WITH_M = 13_000L;
 
+	private static final long RID_STARTS_WITH_D = 4_000L;
 	private static final long RID_STARTS_WITH_T = 20_000L;
 
 	@Override
 	public long getRouteId(@NotNull GRoute gRoute) {
-		if (!Utils.isDigitsOnly(gRoute.getRouteShortName())) {
-			Matcher matcher = DIGITS.matcher(gRoute.getRouteShortName());
+		if (!CharUtils.isDigitsOnly(gRoute.getRouteShortName())) {
+			final Matcher matcher = DIGITS.matcher(gRoute.getRouteShortName());
 			if (matcher.find()) {
-				int digits = Integer.parseInt(matcher.group());
-				if (gRoute.getRouteShortName().startsWith(T)) {
+				final int digits = Integer.parseInt(matcher.group());
+				if (gRoute.getRouteShortName().startsWith(D)) {
+					return RID_STARTS_WITH_D + digits;
+				} else if (gRoute.getRouteShortName().startsWith(T)) {
 					return RID_STARTS_WITH_T + digits;
 				}
 				if (gRoute.getRouteShortName().endsWith(B)) {
@@ -128,24 +87,9 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	}
 
 	@Override
-	public void setTripHeadsign(@NotNull MRoute mRoute, @NotNull MTrip mTrip, @NotNull GTrip gTrip, @NotNull GSpec gtfs) {
-		mTrip.setHeadsignString(
-				cleanTripHeadsign(gTrip.getTripHeadsignOrDefault()),
-				gTrip.getDirectionIdOrDefault()
-		);
-	}
-
-	@Override
 	public boolean directionFinderEnabled() {
 		return true;
 	}
-
-	@Override
-	public boolean mergeHeadsign(@NotNull MTrip mTrip, @NotNull MTrip mTripToMerge) {
-		throw new MTLog.Fatal("Unexpected trips to merge %s and %s.", mTrip, mTripToMerge);
-	}
-
-	private static final Pattern DIRECTION = Pattern.compile("(direction )", Pattern.CASE_INSENSITIVE);
 
 	private static final Pattern SERVICE_LOCAL = Pattern.compile("(service local)", Pattern.CASE_INSENSITIVE);
 
@@ -164,8 +108,8 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		tripHeadsign = EXPRESS_.matcher(tripHeadsign).replaceAll(EMPTY);
 		tripHeadsign = DEVANT_.matcher(tripHeadsign).replaceAll(EMPTY);
 		tripHeadsign = MONT_SAINT_.matcher(tripHeadsign).replaceAll(MONT_SAINT_REPLACEMENT);
-		tripHeadsign = DIRECTION.matcher(tripHeadsign).replaceAll(EMPTY);
 		tripHeadsign = SERVICE_LOCAL.matcher(tripHeadsign).replaceAll(StringUtils.EMPTY);
+		tripHeadsign = CleanUtils.keepToFR(tripHeadsign);
 		tripHeadsign = CleanUtils.cleanBounds(Locale.FRENCH, tripHeadsign);
 		tripHeadsign = CleanUtils.cleanStreetTypesFRCA(tripHeadsign);
 		return CleanUtils.cleanLabelFR(tripHeadsign);
@@ -190,8 +134,8 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	public String cleanStopName(@NotNull String gStopName) {
 		gStopName = _DASH_.matcher(gStopName).replaceAll(SPACE_);
 		gStopName = DEVANT_.matcher(gStopName).replaceAll(EMPTY);
-		gStopName = Utils.replaceAll(gStopName, START_WITH_FACES, CleanUtils.SPACE);
-		gStopName = Utils.replaceAll(gStopName, SPACE_FACES, CleanUtils.SPACE);
+		gStopName = RegexUtils.replaceAllNN(gStopName, START_WITH_FACES, CleanUtils.SPACE);
+		gStopName = RegexUtils.replaceAllNN(gStopName, SPACE_FACES, CleanUtils.SPACE);
 		gStopName = CleanUtils.cleanBounds(Locale.FRENCH, gStopName);
 		gStopName = CleanUtils.cleanStreetTypesFRCA(gStopName);
 		return CleanUtils.cleanLabelFR(gStopName);
@@ -230,16 +174,16 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public int getStopId(@NotNull GStop gStop) {
-		String stopCode = getStopCode(gStop);
-		if (stopCode.length() > 0) {
+		final String stopCode = getStopCode(gStop);
+		if (stopCode.length() > 0 && CharUtils.isDigitsOnly(stopCode)) {
 			return Integer.parseInt(stopCode); // using stop code as stop ID
 		}
 		//noinspection deprecation
-		String stop_id = gStop.getStopId();
-		stop_id = CleanUtils.cleanMergedID(stop_id);
-		Matcher matcher = DIGITS.matcher(stop_id);
+		final String stop_id = CleanUtils.cleanMergedID(gStop.getStopId()).toUpperCase(Locale.ENGLISH);
+		final Matcher matcher = DIGITS.matcher(stop_id);
 		if (matcher.find()) {
-			int digits = Integer.parseInt(matcher.group());
+			final String digitsS = matcher.group();
+			final int digits = Integer.parseInt(digitsS);
 			int stopId;
 			if (stop_id.startsWith(BEL)) {
 				stopId = 100_000;
