@@ -1,22 +1,24 @@
 package org.mtransit.parser.ca_richelieu_citvr_bus;
 
+import static org.mtransit.commons.Constants.SPACE_;
+import static org.mtransit.commons.RegexUtils.DIGITS;
+import static org.mtransit.commons.StringUtils.EMPTY;
+
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mtransit.commons.CharUtils;
 import org.mtransit.commons.CleanUtils;
 import org.mtransit.commons.RegexUtils;
 import org.mtransit.commons.StringUtils;
 import org.mtransit.parser.DefaultAgencyTools;
 import org.mtransit.parser.MTLog;
-import org.mtransit.parser.gtfs.data.GRoute;
 import org.mtransit.parser.gtfs.data.GStop;
 import org.mtransit.parser.mt.data.MAgency;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.mtransit.parser.Constants.SPACE_;
-import static org.mtransit.parser.StringUtils.EMPTY;
 
 // https://exo.quebec/en/about/open-data
 // https://exo.quebec/xdata/citvr/google_transit.zip
@@ -24,6 +26,12 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(@NotNull String[] args) {
 		new ValleeDuRichelieuCITVRBusAgencyTools().start(args);
+	}
+
+	@Nullable
+	@Override
+	public List<Locale> getSupportedLanguages() {
+		return LANG_FR;
 	}
 
 	@Override
@@ -50,40 +58,24 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		return CleanUtils.cleanLabel(routeLongName);
 	}
 
-	private static final long RID_ENDS_WITH_B = 2_000L;
-	private static final long RID_ENDS_WITH_M = 13_000L;
-
-	private static final long RID_STARTS_WITH_D = 4_000L;
-	private static final long RID_STARTS_WITH_T = 20_000L;
-
 	@Override
-	public long getRouteId(@NotNull GRoute gRoute) {
-		if (!CharUtils.isDigitsOnly(gRoute.getRouteShortName())) {
-			final Matcher matcher = DIGITS.matcher(gRoute.getRouteShortName());
-			if (matcher.find()) {
-				final int digits = Integer.parseInt(matcher.group());
-				if (gRoute.getRouteShortName().startsWith(D)) {
-					return RID_STARTS_WITH_D + digits;
-				} else if (gRoute.getRouteShortName().startsWith(T)) {
-					return RID_STARTS_WITH_T + digits;
-				}
-				if (gRoute.getRouteShortName().endsWith(B)) {
-					return RID_ENDS_WITH_B + digits;
-				} else if (gRoute.getRouteShortName().endsWith(M)) {
-					return RID_ENDS_WITH_M + digits;
-				}
-			}
-			throw new MTLog.Fatal("Unexpected route ID for %s!", gRoute);
-		}
-		return super.getRouteId(gRoute);
+	public boolean defaultRouteIdEnabled() {
+		return true;
 	}
 
-	private static final String AGENCY_COLOR = "1F1F1F"; // DARK GRAY (from GTFS)
-
-	@NotNull
 	@Override
-	public String getAgencyColor() {
-		return AGENCY_COLOR;
+	public boolean useRouteShortNameForRouteId() {
+		return true;
+	}
+
+	@Override
+	public boolean defaultRouteLongNameEnabled() {
+		return true;
+	}
+
+	@Override
+	public boolean defaultAgencyColorEnabled() {
+		return true;
 	}
 
 	@Override
@@ -150,8 +142,6 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 		return super.getStopCode(gStop);
 	}
 
-	private static final Pattern DIGITS = Pattern.compile("[\\d]+");
-
 	private static final String A = "A";
 	private static final String B = "B";
 	private static final String C = "C";
@@ -160,8 +150,6 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	private static final String F = "F";
 	private static final String G = "G";
 	private static final String H = "H";
-	private static final String M = "M";
-	private static final String T = "T";
 
 	private static final String LON = "LON";
 	private static final String SHY = "SHY";
