@@ -79,8 +79,8 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	}
 
 	@Override
-	public boolean forceStopTimeFirstNoDropOffLastNoPickupType() {
-		return true; // transit agency data incomplete (ignores bus coming back to main terminus even when coming back IN TRANSIT (no service)
+	public boolean forceStopTimeLastNoPickupType() {
+		return true; // transit agency data incomplete
 	}
 
 	@Override
