@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // https://exo.quebec/en/about/open-data
-// https://exo.quebec/xdata/citvr/google_transit.zip
 public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(@NotNull String[] args) {
