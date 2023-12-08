@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mtransit.commons.CharUtils;
 import org.mtransit.commons.CleanUtils;
+import org.mtransit.commons.FeatureFlags;
 import org.mtransit.commons.RegexUtils;
 import org.mtransit.commons.StringUtils;
 import org.mtransit.parser.DefaultAgencyTools;
@@ -71,6 +72,9 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	@NotNull
 	@Override
 	public String getRouteShortName(@NotNull GRoute gRoute) {
+		if (FeatureFlags.F_EXPORT_GTFS_ID_HASH_INT) {
+			return super.getRouteShortName(gRoute);
+		}
 		return gRoute.getRouteShortName(); // used by GTFS-RT
 	}
 
@@ -149,6 +153,9 @@ public class ValleeDuRichelieuCITVRBusAgencyTools extends DefaultAgencyTools {
 	public String getStopCode(@NotNull GStop gStop) {
 		if ("0".equals(gStop.getStopCode())) {
 			return EMPTY;
+		}
+		if (FeatureFlags.F_EXPORT_GTFS_ID_HASH_INT) {
+			return super.getStopCode(gStop);
 		}
 		//noinspection deprecation
 		return gStop.getStopId(); // used by GTFS-RT
